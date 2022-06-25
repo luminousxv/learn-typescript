@@ -28,10 +28,23 @@ interface Person1 {
     age: number;
 }
 
-function askSomeone( someone: Developer & Person ) {
+function askSomeone( someone: Developer | Person ) {
     someone.name;
     someone.skill; //error
     someone.age; //error
     // 위의 Developer/Person 인터페이스에서 공통된 'name'만 사용 가능
     // 'skill', 'age'를 사용 하려면 위 'typeof'로 구분 해야됨
 }
+askSomeone({ name: '디벨로퍼', skill: '웹 개발'});
+askSomeone({ name: '캡틴', age: 100 });
+
+// intersection type
+let capt: string & number & boolean; //type: never
+
+function askSomeone1 ( someone: Developer & Person) {
+    someone.name;
+    someone.skill;
+    someone.age;
+}
+// Person, Developer의 타입을 다 가지고 와야됨
+askSomeone1({ name: "디벨로퍼", skill: "웹 개발", age: 100 });
