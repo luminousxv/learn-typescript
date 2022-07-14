@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "ES6",
+    "outDir": "./built",
+    "lib": ["DOM", "DOM.Iterable"],
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "rootDir": "./src",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true, 
+    "strictNullChecks": false,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "Node",
+    "isolatedModules": true  
+  },
+  "include": ["./src/**/*"],
+}
