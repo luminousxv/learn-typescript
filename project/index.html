@@ -30,14 +30,18 @@
         <div class="summary-wrapper flex">
           <div class="deaths-container">
             <h3 class="summary-title">Total Deaths</h3>
-            <p class="total deaths">0</p>
+            <p class="total deaths">
+              <var class="deaths"></var>
+            </p>
             <div class="list-wrapper">
               <ol class="deaths-list"></ol>
             </div>
           </div>
           <div class="recovered-container">
             <h3 class="summary-title">Total Recovered</h3>
-            <p class="total recovered">0</p>
+            <p class="total recovered">
+              <var class="recovered"></var>
+            </p>
             <div class="list-wrapper">
               <ol class="recovered-list"></ol>
             </div>
@@ -54,6 +58,6 @@
     </main>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script src="./app.js"></script>
+    <script src="./built/app.js"></script>
   </body>
 </html>
