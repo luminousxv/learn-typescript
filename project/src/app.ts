@@ -1,23 +1,22 @@
 import axios from 'axios';
-import { Chart } from 'chart.js';
-
+import Chart from 'chart.js';
 import { Summary, status, LiveCountryInfo } from './types/type';
 // utils
-function $(selector: string) {
-  return document.querySelector(selector) as HTMLElement;
+function $(selector: string): HTMLElement {
+  return document.querySelector(selector);
 }
-function getUnixTimestamp(date: string) {
+function getUnixTimestamp(date: string): number {
   return new Date(date).getTime();
 }
 
 // DOM
-const confirmedTotal: HTMLSpanElement = $('.confirmed-total');
-const deathsTotal: HTMLElement = $('.deaths');
-const recoveredTotal: HTMLElement = $('.recovered');
-const lastUpdatedTime: HTMLElement = $('.last-updated-time');
-const rankList: HTMLElement = $('.rank-list');
-const deathsList: HTMLElement = $('.deaths-list');
-const recoveredList: HTMLElement = $('.recovered-list');
+const confirmedTotal = $('.confirmed-total') as HTMLSpanElement;
+const deathsTotal = $('.deaths') as HTMLParagraphElement;
+const recoveredTotal = $('.recovered') as HTMLParagraphElement;
+const lastUpdatedTime = $('.last-updated-time') as HTMLParagraphElement;
+const rankList = $('.rank-list') as HTMLOListElement;
+const deathsList = $('.deaths-list') as HTMLOListElement;
+const recoveredList = $('.recovered-list') as HTMLOListElement;
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 const canvas = $('#lineChart') as HTMLCanvasElement;
@@ -25,7 +24,10 @@ const canvas = $('#lineChart') as HTMLCanvasElement;
 function createSpinnerElement(id: string): HTMLDivElement {
   const wrapperDiv: HTMLDivElement = document.createElement('div');
   wrapperDiv.setAttribute('id', id);
-  wrapperDiv.setAttribute('class', 'spinner-wrapper flex justify-center align-center');
+  wrapperDiv.setAttribute(
+    'class',
+    'spinner-wrapper flex justify-center align-center'
+  );
   const spinnerDiv: HTMLDivElement = document.createElement('div');
   spinnerDiv.setAttribute('class', 'ripple-spinner');
   spinnerDiv.appendChild(document.createElement('div'));
@@ -35,16 +37,19 @@ function createSpinnerElement(id: string): HTMLDivElement {
 }
 
 // state
-let isDeathLoading: boolean = false;
-let isRecoveredLoading: boolean = false;
+let isDeathLoading = false;
+let isRecoveredLoading = false;
 
 // api
 function fetchCovidSummary(): Promise<Summary> {
-  const url: string = 'https://api.covid19api.com/summary';
+  const url = 'https://api.covid19api.com/summary';
   return axios.get(url);
 }
 
-function fetchCountryInfo(countryCode: string, status: status): Promise<LiveCountryInfo> {
+function fetchCountryInfo(
+  countryCode: string,
+  status: status
+): Promise<LiveCountryInfo> {
   // params: confirmed, recovered, deaths
   const url = `https://api.covid19api.com/country/${countryCode}/status/${status}`;
   return axios.get(url);
@@ -61,9 +66,12 @@ function initEvents(): void {
   rankList.addEventListener('click', handleListClick);
 }
 
-async function handleListClick(event: Event): Promise<void> {
-  let selectedId: string = '';
-  if (event.target instanceof HTMLParagraphElement || event.target instanceof HTMLSpanElement) {
+async function handleListClick(event: MouseEvent): Promise<void> {
+  let selectedId = '';
+  if (
+    event.target instanceof HTMLParagraphElement ||
+    event.target instanceof HTMLSpanElement
+  ) {
     selectedId = event.target.parentElement.id;
   }
   if (event.target instanceof HTMLLIElement) {
@@ -78,8 +86,14 @@ async function handleListClick(event: Event): Promise<void> {
   isDeathLoading = true;
   isRecoveredLoading = true;
   const { data: deathResponse } = await fetchCountryInfo(selectedId, 'deaths');
-  const { data: recoveredResponse } = await fetchCountryInfo(selectedId, 'recovered');
-  const { data: confirmedResponse } = await fetchCountryInfo(selectedId, 'confirmed');
+  const { data: recoveredResponse } = await fetchCountryInfo(
+    selectedId,
+    'recovered'
+  );
+  const { data: confirmedResponse } = await fetchCountryInfo(
+    selectedId,
+    'confirmed'
+  );
   endLoadingAnimation();
   setDeathsList(deathResponse);
   setTotalDeathsByCountry(deathResponse);
@@ -90,9 +104,11 @@ async function handleListClick(event: Event): Promise<void> {
   isRecoveredLoading = false;
 }
 
-function setDeathsList(data: LiveCountryInfo["data"]): void {
-  const sorted: LiveCountryInfo['data'] = data.sort((a, b) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date));
-  sorted.forEach((value) => {
+function setDeathsList(data: LiveCountryInfo['data']): void {
+  const sorted: LiveCountryInfo['data'] = data.sort(
+    (a, b) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
+  );
+  sorted.forEach(value => {
     const li: HTMLElement = document.createElement('li');
     li.setAttribute('class', 'list-item-b flex align-center');
     const span: HTMLSpanElement = document.createElement('span');
@@ -115,8 +131,10 @@ function setTotalDeathsByCountry(data: LiveCountryInfo['data']): void {
 }
 
 function setRecoveredList(data: LiveCountryInfo['data']) {
-  const sorted: LiveCountryInfo['data'] = data.sort((a, b) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date));
-  sorted.forEach((value) => {
+  const sorted: LiveCountryInfo['data'] = data.sort(
+    (a, b) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
+  );
+  sorted.forEach(value => {
     const li: HTMLElement = document.createElement('li');
     li.setAttribute('class', 'list-item-b flex align-center');
     const span: HTMLSpanElement = document.createElement('span');
@@ -130,7 +148,7 @@ function setRecoveredList(data: LiveCountryInfo['data']) {
   });
 }
 
-function clearRecoveredList():void {
+function clearRecoveredList(): void {
   recoveredList.innerHTML = null;
 }
 
@@ -158,10 +176,10 @@ async function setupData() {
 }
 
 function renderChart(data: number[], labels: string[]): void {
-  var ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d');
   Chart.defaults.color = '#f5eaea';
   Chart.defaults.font.family = 'Exo 2';
-  new Chart(ctx, {
+  new Chart(ctx as CanvasRenderingContext2D, {
     type: 'line',
     data: {
       labels,
@@ -179,26 +197,39 @@ function renderChart(data: number[], labels: string[]): void {
 }
 
 function setChartData(data: LiveCountryInfo['data']): void {
-  const chartData: number[] = data.slice(-14).map((value) => value.Cases);
-  const chartLabel: string[] = data.slice(-14).map((value) => new Date(value.Date).toLocaleDateString().slice(5, -1));
+  const chartData: number[] = data.slice(-14).map(value => value.Cases);
+  const chartLabel: string[] = data
+    .slice(-14)
+    .map(value => new Date(value.Date).toLocaleDateString().slice(5, -1));
   renderChart(chartData, chartLabel);
 }
 
 function setTotalConfirmedNumber(data: Summary['data']): void {
-  confirmedTotal.innerText = data.Countries.reduce((total, current) => (total += current.TotalConfirmed), 0).toString();
+  confirmedTotal.innerText = data.Countries.reduce(
+    (total, current) => (total += current.TotalConfirmed),
+    0
+  ).toString();
 }
 
 function setTotalDeathsByWorld(data: Summary['data']): void {
-  deathsTotal.innerText = data.Countries.reduce((total, current) => (total += current.TotalDeaths), 0).toString();
+  deathsTotal.innerText = data.Countries.reduce(
+    (total, current) => (total += current.TotalDeaths),
+    0
+  ).toString();
 }
 
 function setTotalRecoveredByWorld(data: Summary['data']): void {
-  recoveredTotal.innerText = data.Countries.reduce((total, current) => (total += current.TotalRecovered), 0).toString();
+  recoveredTotal.innerText = data.Countries.reduce(
+    (total, current) => (total += current.TotalRecovered),
+    0
+  ).toString();
 }
 
 function setCountryRanksByConfirmedCases(data: Summary['data']) {
-  const sorted = data.Countries.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed);
-  sorted.forEach((value) => {
+  const sorted = data.Countries.sort(
+    (a, b) => b.TotalConfirmed - a.TotalConfirmed
+  );
+  sorted.forEach(value => {
     const li: HTMLElement = document.createElement('li');
     li.setAttribute('class', 'list-item flex align-center');
     li.setAttribute('id', value.Slug);
