@@ -7,6 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import axios from 'axios';
+import * as Chart from 'chart.js';
 // utils
 function $(selector) {
     return document.querySelector(selector);
@@ -61,7 +63,8 @@ function initEvents() {
 function handleListClick(event) {
     return __awaiter(this, void 0, void 0, function* () {
         let selectedId = '';
-        if (event.target instanceof HTMLParagraphElement || event.target instanceof HTMLSpanElement) {
+        if (event.target instanceof HTMLParagraphElement ||
+            event.target instanceof HTMLSpanElement) {
             selectedId = event.target.parentElement.id;
         }
         if (event.target instanceof HTMLLIElement) {
@@ -90,7 +93,7 @@ function handleListClick(event) {
 }
 function setDeathsList(data) {
     const sorted = data.sort((a, b) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date));
-    sorted.forEach((value) => {
+    sorted.forEach(value => {
         const li = document.createElement('li');
         li.setAttribute('class', 'list-item-b flex align-center');
         const span = document.createElement('span');
@@ -111,7 +114,7 @@ function setTotalDeathsByCountry(data) {
 }
 function setRecoveredList(data) {
     const sorted = data.sort((a, b) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date));
-    sorted.forEach((value) => {
+    sorted.forEach(value => {
         const li = document.createElement('li');
         li.setAttribute('class', 'list-item-b flex align-center');
         const span = document.createElement('span');
@@ -149,7 +152,7 @@ function setupData() {
     });
 }
 function renderChart(data, labels) {
-    var ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
     Chart.defaults.color = '#f5eaea';
     Chart.defaults.font.family = 'Exo 2';
     new Chart(ctx, {
@@ -169,8 +172,10 @@ function renderChart(data, labels) {
     });
 }
 function setChartData(data) {
-    const chartData = data.slice(-14).map((value) => value.Cases);
-    const chartLabel = data.slice(-14).map((value) => new Date(value.Date).toLocaleDateString().slice(5, -1));
+    const chartData = data.slice(-14).map(value => value.Cases);
+    const chartLabel = data
+        .slice(-14)
+        .map(value => new Date(value.Date).toLocaleDateString().slice(5, -1));
     renderChart(chartData, chartLabel);
 }
 function setTotalConfirmedNumber(data) {
@@ -184,7 +189,7 @@ function setTotalRecoveredByWorld(data) {
 }
 function setCountryRanksByConfirmedCases(data) {
     const sorted = data.Countries.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed);
-    sorted.forEach((value) => {
+    sorted.forEach(value => {
         const li = document.createElement('li');
         li.setAttribute('class', 'list-item flex align-center');
         li.setAttribute('id', value.Slug);
