@@ -5,12 +5,12 @@ export interface Summary {
   };
 }
 
-interface Global extends DeathRecovered{
+interface Global extends DeathRecovered {
   NewConfirmed: number;
   TotalConfirmed: number;
 }
 
-interface Countries extends Global{
+interface Countries extends Global {
   Country: string;
   CountryCode: string;
   Slug: string;
@@ -25,7 +25,7 @@ interface DeathRecovered {
 }
 
 export interface LiveCountryInfo {
-  data: Info[]
+  data: Info[];
 }
 
 interface Info {
@@ -34,17 +34,6 @@ interface Info {
   Cases: number;
   Status: string;
   Date: string;
-}
-
-export interface HTMLElementTagNameMap {
-  ".confirmed-total": HTMLSpanElement;
-  "deaths-list": HTMLOListElement;
-  "recoverd-list": HTMLOListElement;
-  "rank-list": HTMLOListElement;
-  "last-updated-time": HTMLParagraphElement;
-  "deaths": HTMLElement;
-  "recovered": HTMLElement;
-
 }
 
 export type status = 'confirmed' | 'recovered' | 'deaths';
